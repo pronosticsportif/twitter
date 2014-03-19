@@ -9,16 +9,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+
+
 import com.detectlanguage.DetectLanguage;
 import com.detectlanguage.Result;
 
 public class SentimentAnalyse {
 
-
 	
-	
+	public static void main(String[] args) throws Exception 
+	{ 
+		System.out.println("score :"+sentiment("real madrid joue très bien"));
+	}
 	private static String languageDetection(String str) throws Exception
 	{
 		
@@ -29,7 +35,7 @@ public class SentimentAnalyse {
 
          Result result = results.get(0);
          String lang =result.language;
-         if(lang.compareTo("ca")==0)lang="fr";
+     
 		return lang;
 		
 	} 
@@ -48,7 +54,7 @@ public class SentimentAnalyse {
  
 		con.setDoOutput(true);
 		 OutputStream wr = con.getOutputStream();
-		wr.write(data.getBytes());
+		wr.write(data.getBytes("UTF-8"));
 		wr.flush();
 		//wr.close();
 		if (con.getResponseCode() != 200) {
