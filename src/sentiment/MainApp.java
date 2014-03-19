@@ -8,7 +8,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
-
 public class MainApp {
 	public static void main(String[] args) throws TwitterException 
 	{  
@@ -30,6 +29,7 @@ public class MainApp {
 		StatusListener listener = new StatusListener(){
 	        public void onStatus(Status status) {
 	            System.out.println(status.getUser().getFollowersCount() + " : " + status.getText());
+	           
 	        }
 	        public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
 	        public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
