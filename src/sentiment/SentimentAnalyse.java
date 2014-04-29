@@ -15,11 +15,9 @@ import com.detectlanguage.Result;
 
 public class SentimentAnalyse {
 
-	public static void main(String[] args) throws Exception {
-		System.out.println("score :" + sentiment("real madrid joue très bien"));
-	}
+	
 
-	private static String languageDetection(String str) throws Exception {
+	public static String languageDetection(String str) throws Exception {
 		DetectLanguage.apiKey = "1079d6ab1cfbd9e42247993601647e54";
 		List<Result> results = DetectLanguage.detect(str);
 
@@ -30,12 +28,12 @@ public class SentimentAnalyse {
 
 	}
 
-	public static double sentiment(String str) throws Exception {
-		str = encode(str);
+	public static int sentiment(String str , String langue) throws Exception {
+		
 		String url = "http://sentimentanalyzer.appspot.com/api/classify.json";
-		String lang = languageDetection(str);
+	
 		String data = "{\"data\": [{\"content\": \"" + str + "\", \"lang\": \""
-				+ lang + "\"}]}";
+				+ langue + "\"}]}";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -74,16 +72,19 @@ public class SentimentAnalyse {
 		System.out.println("score : " + element.get("score"));
 
 		double score = (double) element.get("score");
+		int scoref ;
 		if (score < 0.5)
-			score = 1 - score;
+			scoref = -1;
+		else 
+			scoref = 1 ;
 		con.disconnect();
-		return score;
+		return scoref;
 
 	}
 
 	public static int sentimentSpanish(String str) throws Exception {
 		String url = "http://www.sentiment140.com/api/bulkClassifyJson";
-		str = encode(str);
+		
 
 		String data = "{\"lan'uage\": \"auto\" , \"data\": [{\"text\": \""
 				+ str + "\"}]}";
@@ -95,7 +96,7 @@ public class SentimentAnalyse {
 
 		con.setDoOutput(true);
 		OutputStream wr = con.getOutputStream();
-		wr.write(data.getBytes("UTF-8"));
+		wr.write(data.getBytes());
 		wr.flush();
 		// wr.close();
 		if (con.getResponseCode() != 200) {
@@ -107,16 +108,16 @@ public class SentimentAnalyse {
 		BufferedReader responseBuffer = new BufferedReader(
 				new InputStreamReader((con.getInputStream())));
 
-		System.out.println("\nSending 'POST' request to URL : " + url);
+	
 		StringBuffer result = new StringBuffer();
 		String output;
-		System.out.println("Output from Server:\n");
+		
 		while ((output = responseBuffer.readLine()) != null) {
 			// System.out.println(output);
 			result.append(output);
 
 		}
-		System.out.println(" result : " + result.toString());
+		
 
 		JSONObject o = new JSONObject(result.toString());
 		JSONArray array = new JSONArray(o.get("data").toString());
@@ -130,6 +131,10 @@ public class SentimentAnalyse {
 
 		con.disconnect();
 		responseBuffer.close();
+		if(score == 0)
+			score = -1 ;
+		else if (score == 4)
+			score = 1 ;
 		return score;
 
 	}

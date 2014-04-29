@@ -26,27 +26,36 @@ public class FreeBase {
 	private static final String API_KEY = "AIzaSyA9fEFmKg6upMuQ3PD7gy4Ojlpe72xfbDM";
 
 	
-	public static Boolean isJournaliste() throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException{
+	public static String isJournaliste(String nom) throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException{
 	
 	DefaultHttpClient httpclient = new DefaultHttpClient();
 	JSONParser parser = new JSONParser();
 
 	List<NameValuePair> params = new ArrayList<NameValuePair>();
-	params.add(new BasicNameValuePair("query", "Henry Winter"));
+	params.add(new BasicNameValuePair("query", nom));
 	params.add(new BasicNameValuePair("key", API_KEY));
 
 	String serviceURL = "https://www.googleapis.com/freebase/v1/search";
 	String url = serviceURL + "?" + URLEncodedUtils.format(params, "UTF-8");      
 	HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
 	JSONObject response = (JSONObject)parser.parse(EntityUtils.toString(httpResponse.getEntity()));
-        System.out.println(response.get("result"));
-		return null;
-
+	
+	if(response.get("result").toString().contains("Journalist") ||  response.get("result").toString().contains("Sports commentator")  )
+	
+		return "Journalist" ;
+	
+	if(response.get("result").toString().contains("Professional Association Football Player"))
+		
+		return "Professional Association Football Player";
+	
+	else 
+			return "fan" ;
+	
 
 	}
 	public static void main(String[] args) throws TwitterException, ClientProtocolException, ParseException, IOException, org.json.simple.parser.ParseException 
 	{ 
-		 FreeBase.isJournaliste() ;
+		
 		
 	}
 }
